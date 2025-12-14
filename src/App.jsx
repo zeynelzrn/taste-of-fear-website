@@ -3,13 +3,14 @@ import { Ghost, Skull, Utensils, BookOpen, Flame, Users, Menu, X, Mail, MessageS
 // Disqus kütüphanesini import ediyoruz
 import { DiscussionEmbed } from 'disqus-react';
 
-// Görselleri import ediyoruz (WebP formatında)
+// --- GÖRSELLER ---
+// Mutfak .webp (hızlı açılsın diye), Karakterler .png (dediğin gibi eski haline getirdim)
 import bgImage from './assets/mutfak.webp';
-import charClown from './assets/char-clown.webp';
-import charVampire from './assets/char-vampire.webp';
-import charZombie from './assets/char-zombie.webp';
-import charGhost from './assets/char-ghost.webp';
-import charShadow from './assets/char-shadow.webp';
+import charClown from './assets/char-clown.png';
+import charVampire from './assets/char-vampire.png';
+import charZombie from './assets/char-zombie.png';
+import charGhost from './assets/char-ghost.png';
+import charShadow from './assets/char-shadow.png';
 
 // --- KARAKTER VERİLERİ ---
 const characters = [
@@ -94,11 +95,12 @@ const recipes = [
 function CustomForm() {
   const [submitted, setSubmitted] = useState(false);
   const GOOGLE_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLScL_rnULAULONLh4HHErm1bH1PlSvUQOPDAwf8pyxowIVcNYQ/formResponse";
+  
   const entry_AD = "entry.1738217772";
   const entry_MAIL = "entry.124233123";
   const entry_PUAN = "entry.791899184";
-  const entry_TARIF = "entry.125698084";
-  const entry_HATA = "entry.396713294";
+  const entry_TARIF = "entry.125698084"; 
+  const entry_HATA = "entry.396713294"; 
 
   if (submitted) {
     return (
@@ -170,11 +172,10 @@ function App() {
   };
 
   return (
-    // DİKKAT: Ana div'e z-0 ekledik ki üst üste binme (stacking context) doğru çalışsın.
-    <div className="min-h-screen text-gray-200 font-tech selection:bg-neon-green selection:text-black relative overflow-x-hidden z-0">
+    <div className="min-h-screen text-gray-200 font-tech selection:bg-neon-green selection:text-black relative overflow-x-hidden">
       
       {/* BACKGROUND IMAGE & OVERLAY */}
-      {/* DEĞİŞİKLİK: z-[-1] yerine z-0 yaptık ve pointer-events-none ekledik (tıklamayı engellesin) */}
+      {/* ÇÖZÜM BURADA: z-[-1] yerine z-0 yaptık. Böylece siyah index.css'in önünde ama içeriğin arkasında duracak. */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <img src={bgImage} alt="Dark Kitchen" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/80 to-black"></div>
@@ -206,9 +207,8 @@ function App() {
         </div>
       </nav>
 
-      {/* --- TÜM BÖLÜMLER --- */}
-      {/* DEĞİŞİKLİK: Her bölüme 'relative z-10' ekledik ki görselin üstünde kalsınlar */}
-
+      {/* --- HERO SECTION --- */}
+      {/* ÇÖZÜM: Tüm section'lara 'relative z-10' ekledik. Böylece z-0 olan resmin üstünde kalırlar. */}
       <section id="game" className="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-24 relative z-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-neon-green/20 rounded-full blur-[120px] -z-10 animate-pulse"></div>
         <h2 className="text-6xl md:text-9xl font-horror text-transparent bg-clip-text bg-gradient-to-b from-neon-green to-green-900 mb-6 drop-shadow-[0_0_25px_rgba(57,255,20,0.5)] animate-bounce-slow leading-tight">TASTE OF FEAR</h2>
@@ -223,6 +223,7 @@ function App() {
         </div>
       </section>
 
+      {/* --- CHARACTERS SECTION --- */}
       <section id="characters" className="py-40 relative z-10 bg-gray-950/80 backdrop-blur-md border-y border-neon-green/20 overflow-visible">
         <div className="container mx-auto px-4">
           <div className="text-center mb-40">
@@ -250,6 +251,7 @@ function App() {
         </div>
       </section>
 
+      {/* --- MENU SECTION --- */}
       <section id="menu" className="py-24 relative z-10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -274,6 +276,7 @@ function App() {
         </div>
       </section>
 
+      {/* --- FEEDBACK FORM --- */}
       <section id="contact" className="py-24 relative z-10">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="bg-gray-950/80 backdrop-blur-xl p-8 md:p-12 rounded-2xl border border-neon-green/30 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
@@ -286,6 +289,7 @@ function App() {
         </div>
       </section>
 
+      {/* --- FEATURES --- */}
       <section className="py-20 bg-gray-950/80 backdrop-blur-sm border-y border-gray-800 relative z-10">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-12 text-center">
@@ -306,6 +310,7 @@ function App() {
         </div>
       </section>
 
+      {/* --- FORUM SECTION --- */}
       <section id="forum" className="py-24 bg-gray-950/90 backdrop-blur-md border-t border-neon-green/20 relative z-10">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="text-center mb-12">
@@ -318,6 +323,7 @@ function App() {
         </div>
       </section>
 
+      {/* --- FOOTER --- */}
       <footer className="py-8 bg-black text-center border-t border-gray-800 text-gray-600 text-xs font-tech tracking-widest relative z-10">
         <p>&copy; 2025 TASTE OF FEAR. ALL RIGHTS RESERVED.</p>
       </footer>
