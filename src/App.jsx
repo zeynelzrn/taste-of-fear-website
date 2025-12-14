@@ -4,7 +4,7 @@ import { Ghost, Skull, Utensils, BookOpen, Flame, Users, Menu, X, Mail, MessageS
 import { DiscussionEmbed } from 'disqus-react';
 
 // Görselleri import ediyoruz
-import bgImage from './assets/mutfak.png';
+import bgImage from './assets/mutfak.webp';
 import charClown from './assets/char-clown.png';
 import charVampire from './assets/char-vampire.png';
 import charZombie from './assets/char-zombie.png';
