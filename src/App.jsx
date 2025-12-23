@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Ghost, Skull, Utensils, BookOpen, Flame, Users, Menu, X, Mail, MessageSquare, Download, Loader2, CheckCircle, PartyPopper } from 'lucide-react';
+import React, { useState } from 'react';
+import { Ghost, Skull, Utensils, BookOpen, Flame, Users, Menu, X, Mail, MessageSquare, Download, Loader2, CheckCircle, PartyPopper, Lock, KeyRound } from 'lucide-react';
 import { DiscussionEmbed } from 'disqus-react';
 
 // --- GÖRSELLER ---
@@ -27,11 +27,73 @@ const recipes = [
   { category: "TATLILAR & ICECEKLER", items: [{ name: "Kanlı Şırıngalar", ingredients: "4 Şırınga + 1 Parlak Kan Tüpü" }, { name: "Çürük Diş Pastası", ingredients: "4 Çürük Diş + 2 Kurabiye" }, { name: "Kusmuk Şekeri", ingredients: "2 Asit + 1 Bilinmeyen Yağ + 4 Kırmızı Şeker" }, { name: "Saf Kan Kokteyli", ingredients: "9 Parlak Kan + 44 Kesme Şeker (Kırmızı)" }] }
 ];
 
-// --- DEMO TALEP MODAL BİLEŞENİ (GELİŞMİŞ VERSİYON) ---
+// --- GİZLİ ERİŞİM MODALI ---
+function SecretAccessModal({ onClose }) {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+
+  // --- BURAYI DÜZENLE ---
+  const CORRECT_PASSWORD = "orkunhocam"; // ŞİFRE DEĞİŞİM YERİ
+  const DRIVE_LINK = "https://drive.google.com/YOUR_DRIVE_LINK_HERE"; // Drive link yeri
+  // ----------------------
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (password === CORRECT_PASSWORD) {
+      window.open(DRIVE_LINK, "_blank");
+      onClose();
+    } else {
+      setError(true);
+      setPassword(""); 
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-sm bg-gray-900 border-2 border-red-600 rounded-xl p-8 shadow-[0_0_100px_rgba(220,38,38,0.4)] text-center animate-slide-in">
+        
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition"><X size={24} /></button>
+
+        <div className="flex justify-center mb-6">
+          <div className="p-4 bg-red-900/20 rounded-full border border-red-600 animate-pulse">
+            <Lock className="text-red-500 w-10 h-10" />
+          </div>
+        </div>
+
+        <h3 className="text-2xl font-horror text-red-500 mb-2 tracking-wider">YETKILI ERISIMI</h3>
+        <p className="text-gray-400 text-xs mb-6">
+          Bu alan kısıtlıdır. Sadece yetkili kişiler erişim şifresiyle giriş yapabilir.
+        </p>
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div className="relative group">
+            <KeyRound className="absolute left-3 top-3 text-gray-500 w-5 h-5 group-focus-within:text-red-500 transition-colors" />
+            <input 
+              type="password" 
+              value={password}
+              onChange={(e) => { setPassword(e.target.value); setError(false); }}
+              className="w-full bg-black border border-gray-700 rounded p-3 pl-10 text-white focus:border-red-600 focus:outline-none transition-all placeholder-gray-600"
+              placeholder="Erişim Şifresi"
+              autoFocus
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-xs animate-bounce font-bold">HATALI ŞİFRE! ERİŞİM REDDEDİLDİ.</p>}
+
+          <button type="submit" className="w-full bg-red-700 hover:bg-red-600 text-white font-bold py-3 rounded transition-all shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)]">
+            DOSYAYI AÇ
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// --- DEMO TALEP MODAL BİLEŞENİ ---
 function DemoRequestModal({ onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isClosing, setIsClosing] = useState(false); // Kapanma animasyonu için state
+  const [isClosing, setIsClosing] = useState(false);
 
   const GOOGLE_DEMO_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSd-xc0DiAQbJsN5PuD1zOYXagT1DbqoqAkR-41B7ldji73KFw/formResponse"; 
   const demo_ADSOYAD = "entry.447931260"; 
@@ -47,20 +109,14 @@ function DemoRequestModal({ onClose }) {
     }, 1500);
   };
 
-  // Kapanma Fonksiyonu: Önce animasyonu oynatır, sonra kapatır
   const handleClose = () => {
     setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-    }, 400); // 400ms animasyon süresi kadar bekle
+    setTimeout(() => { onClose(); }, 400);
   };
 
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm transition-opacity duration-300 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
-      
-      {/* Container: isClosing true ise 'animate-slide-out', değilse 'animate-slide-in' */}
       <div className={`relative w-full max-w-lg bg-gray-950 border border-neon-green/50 rounded-2xl p-8 shadow-[0_0_60px_rgba(57,255,20,0.15)] ${isClosing ? 'animate-slide-out' : 'animate-slide-in'}`}>
-        
         <button onClick={handleClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition hover:rotate-90 duration-300"><X size={28} /></button>
 
         {!submitted ? (
@@ -71,51 +127,22 @@ function DemoRequestModal({ onClose }) {
             </div>
             <iframe name="hidden_demo_iframe" id="hidden_demo_iframe" style={{display: 'none'}} onLoad={() => {}}></iframe>
             <form action={GOOGLE_DEMO_ACTION_URL} method="POST" target="hidden_demo_iframe" onSubmit={handleSubmit} className="space-y-5">
-              <div className="group">
-                <label className="block text-neon-green text-[10px] font-bold mb-1 tracking-[0.2em] group-focus-within:text-white transition-colors">AD SOYAD</label>
-                <input type="text" name={demo_ADSOYAD} className="w-full bg-gray-900/50 border border-gray-700 rounded p-3 text-white focus:border-neon-green focus:outline-none focus:bg-gray-900 transition-all duration-300 placeholder-gray-600" placeholder="Adınız..." />
-              </div>
+              <div className="group"><label className="block text-neon-green text-[10px] font-bold mb-1 tracking-[0.2em]">AD SOYAD</label><input type="text" name={demo_ADSOYAD} className="w-full bg-gray-900/50 border border-gray-700 rounded p-3 text-white focus:border-neon-green focus:outline-none focus:bg-gray-900 transition-all placeholder-gray-600" placeholder="Adınız..." /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="group">
-                  <label className="block text-neon-green text-[10px] font-bold mb-1 tracking-[0.2em] group-focus-within:text-white transition-colors">YAS</label>
-                  <input type="text" name={demo_YAS} className="w-full bg-gray-900/50 border border-gray-700 rounded p-3 text-white focus:border-neon-green focus:outline-none focus:bg-gray-900 transition-all duration-300 placeholder-gray-600" placeholder="Yaşınız..." />
-                </div>
-                <div className="group">
-                  <label className="block text-neon-green text-[10px] font-bold mb-1 tracking-[0.2em] group-focus-within:text-white transition-colors">TELEFON</label>
-                  <input type="tel" name={demo_TEL} className="w-full bg-gray-900/50 border border-gray-700 rounded p-3 text-white focus:border-neon-green focus:outline-none focus:bg-gray-900 transition-all duration-300 placeholder-gray-600" placeholder="05..." />
-                </div>
+                <div className="group"><label className="block text-neon-green text-[10px] font-bold mb-1 tracking-[0.2em]">YAS</label><input type="text" name={demo_YAS} className="w-full bg-gray-900/50 border border-gray-700 rounded p-3 text-white focus:border-neon-green focus:outline-none focus:bg-gray-900 transition-all placeholder-gray-600" placeholder="Yaşınız..." /></div>
+                <div className="group"><label className="block text-neon-green text-[10px] font-bold mb-1 tracking-[0.2em]">TELEFON</label><input type="tel" name={demo_TEL} className="w-full bg-gray-900/50 border border-gray-700 rounded p-3 text-white focus:border-neon-green focus:outline-none focus:bg-gray-900 transition-all placeholder-gray-600" placeholder="05..." /></div>
               </div>
-              <div className="group">
-                <label className="block text-neon-green text-[10px] font-bold mb-1 tracking-[0.2em] group-focus-within:text-white transition-colors">E-POSTA ADRESI <span className="text-red-500">*</span></label>
-                <input type="email" name={demo_EMAIL} required className="w-full bg-gray-900/50 border border-gray-700 rounded p-3 text-white focus:border-neon-green focus:outline-none focus:bg-gray-900 transition-all duration-300 placeholder-gray-600" placeholder="ornek@email.com" />
-              </div>
-              <button type="submit" disabled={isSubmitting} className={`w-full flex items-center justify-center gap-3 font-bold text-xl py-4 rounded transition-all duration-300 mt-6 ${isSubmitting ? 'bg-gray-800 text-gray-400 cursor-not-allowed border border-gray-700' : 'bg-neon-green text-black hover:bg-white hover:scale-[1.02] shadow-[0_0_20px_rgba(57,255,20,0.4)] hover:shadow-[0_0_30px_rgba(57,255,20,0.6)]'}`}>{isSubmitting ? <><Loader2 className="animate-spin-slow" size={24} /> GÖNDERİLİYOR...</> : "TALEBI GONDER"}</button>
+              <div className="group"><label className="block text-neon-green text-[10px] font-bold mb-1 tracking-[0.2em]">E-POSTA ADRESI <span className="text-red-500">*</span></label><input type="email" name={demo_EMAIL} required className="w-full bg-gray-900/50 border border-gray-700 rounded p-3 text-white focus:border-neon-green focus:outline-none focus:bg-gray-900 transition-all placeholder-gray-600" placeholder="ornek@email.com" /></div>
+              <button type="submit" disabled={isSubmitting} className={`w-full flex items-center justify-center gap-3 font-bold text-xl py-4 rounded transition-all duration-300 mt-6 ${isSubmitting ? 'bg-gray-800 text-gray-400 cursor-not-allowed border border-gray-700' : 'bg-neon-green text-black hover:bg-white hover:scale-[1.02] shadow-[0_0_20px_rgba(57,255,20,0.4)]'}`}>{isSubmitting ? <><Loader2 className="animate-spin-slow" size={24} /> GÖNDERİLİYOR...</> : "TALEBI GONDER"}</button>
             </form>
           </>
         ) : (
-          /* --- GÜZELLEŞTİRİLMİŞ BAŞARILI EKRANI --- */
           <div className="text-center py-8 animate-fade-in flex flex-col items-center justify-center relative overflow-hidden">
-            {/* Arka plan efekti */}
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-neon-green/5 to-transparent pointer-events-none"></div>
-            
-            <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center mb-6 border-2 border-neon-green shadow-[0_0_30px_rgba(57,255,20,0.5)] animate-bounce-slow z-10">
-               <PartyPopper className="text-neon-green w-12 h-12" />
-            </div>
-            
+            <div className="w-24 h-24 bg-black rounded-full flex items-center justify-center mb-6 border-2 border-neon-green shadow-[0_0_30px_rgba(57,255,20,0.5)] animate-bounce-slow z-10"><PartyPopper className="text-neon-green w-12 h-12" /></div>
             <h4 className="text-4xl font-horror text-white mb-4 drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] z-10">Talebin Alindi!</h4>
-            
-            <div className="bg-gray-900/80 p-4 rounded-lg border border-gray-800 mb-6 max-w-xs z-10">
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Aramıza hoş geldin. Demo hazır olduğunda, verdiğin mail adresine <span className="text-neon-green font-bold">özel erişim linkini</span> göndereceğiz.
-                </p>
-            </div>
-
-            <button 
-              onClick={handleClose} 
-              className="px-10 py-3 bg-neon-green text-black rounded font-bold tracking-wider hover:bg-white hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(57,255,20,0.4)] z-10"
-            >
-              HARİKA
-            </button>
+            <div className="bg-gray-900/80 p-4 rounded-lg border border-gray-800 mb-6 max-w-xs z-10"><p className="text-gray-300 text-sm leading-relaxed">Aramıza hoş geldin. Demo hazır olduğunda, verdiğin mail adresine <span className="text-neon-green font-bold">özel erişim linkini</span> göndereceğiz.</p></div>
+            <button onClick={handleClose} className="px-10 py-3 bg-neon-green text-black rounded font-bold tracking-wider hover:bg-white hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(57,255,20,0.4)] z-10">HARİKA</button>
           </div>
         )}
       </div>
@@ -164,6 +191,7 @@ function CustomForm() {
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [isSecretModalOpen, setIsSecretModalOpen] = useState(false);
   const closeMenu = () => setIsMenuOpen(false);
 
   const disqusShortname = "tasteoffear"; 
@@ -177,8 +205,13 @@ function App() {
   return (
     <div className="min-h-screen text-gray-200 font-tech selection:bg-neon-green selection:text-black relative overflow-x-hidden z-0">
       
+      {/* MODALLAR */}
       {isDemoModalOpen && (
         <DemoRequestModal onClose={() => setIsDemoModalOpen(false)} />
+      )}
+      
+      {isSecretModalOpen && (
+        <SecretAccessModal onClose={() => setIsSecretModalOpen(false)} />
       )}
 
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -186,7 +219,6 @@ function App() {
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/80 to-black"></div>
       </div>
 
-      {/* --- NAVBAR --- */}
       <nav className="fixed w-full border-b border-neon-green/20 bg-gray-950/80 backdrop-blur-md z-50 py-4 transition-all duration-300">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <h1 className="text-2xl md:text-3xl text-neon-green font-horror tracking-widest cursor-pointer hover:text-white transition drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] z-50">TASTE OF FEAR</h1>
@@ -235,9 +267,9 @@ function App() {
         <h2 className="text-6xl md:text-9xl font-horror text-transparent bg-clip-text bg-gradient-to-b from-neon-green to-green-900 mb-6 drop-shadow-[0_0_25px_rgba(57,255,20,0.5)] animate-bounce-slow leading-tight">TASTE OF FEAR</h2>
         <p className="text-lg md:text-3xl max-w-3xl text-gray-100 mb-10 border-l-8 border-neon-green pl-6 font-bold shadow-black drop-shadow-lg text-left md:text-center">"Midem doldu ama ruhum hala aç..." <br /><span className="text-neon-green text-base md:text-lg font-normal block mt-2">Yanlış malzemeyi seçersen, kazandaki sonraki et sen olursun.</span></p>
         
-        <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full md:w-auto px-4">
+        {/* BUTTON GRUBU - MOBİLDE YANYANA YERLEŞİM DÜZENLEMESİ YAPILDI */}
+        <div className="flex flex-wrap justify-center gap-4 md:gap-6 w-full max-w-5xl px-4">
           
-          {/* BUTON DÜZELTİLDİ: justify-center eklendi (Mobilde ortalama için) */}
           <button 
             onClick={() => setIsDemoModalOpen(true)}
             className="relative w-full md:w-auto px-8 py-4 bg-neon-green text-black font-horror text-xl md:text-2xl rounded overflow-hidden group hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(57,255,20,0.6)] flex items-center justify-center gap-2"
@@ -247,11 +279,23 @@ function App() {
           </button>
           
           <a href="#menu" className="w-full md:w-auto px-8 py-4 border-2 border-neon-green text-neon-green font-horror text-lg md:text-xl rounded hover:bg-neon-green hover:text-black transition-all duration-300 flex justify-center items-center gap-3 hover:shadow-[0_0_20px_rgba(57,255,20,0.4)]"><BookOpen size={24} /> MENUYE BAK</a>
-          <a href="#forum" className="w-full md:w-auto px-8 py-4 border-2 border-gray-500 text-gray-300 font-horror text-lg md:text-xl rounded hover:border-white hover:text-white transition-all duration-300 flex justify-center items-center gap-3 bg-black/40 hover:bg-black/80"><MessageSquare size={24} /> FORUMA KATIL</a>
+          
+          {/* YENİ GRUPLAMA: MOBİLDE YAN YANA DURACAKLAR */}
+          <div className="flex w-full md:w-auto gap-4">
+            <a href="#forum" className="flex-1 md:w-auto px-8 py-4 border-2 border-gray-500 text-gray-300 font-horror text-lg md:text-xl rounded hover:border-white hover:text-white transition-all duration-300 flex justify-center items-center gap-3 bg-black/40 hover:bg-black/80"><MessageSquare size={24} /> FORUMA KATIL</a>
+            
+            <button 
+              onClick={() => setIsSecretModalOpen(true)}
+              className="w-auto p-4 border-2 border-red-600 text-red-500 rounded aspect-square hover:bg-red-600 hover:text-white transition-all duration-300 flex justify-center items-center bg-black/40 hover:bg-black/80 shadow-[0_0_15px_rgba(220,38,38,0.3)]"
+            >
+              <Lock size={24} /> 
+            </button>
+          </div>
+
         </div>
       </section>
 
-      {/* --- CHARACTERS SECTION --- */}
+      {/* ... (Diğer bölümler aynen devam ediyor) ... */}
       <section id="characters" className="py-40 relative z-10 bg-gray-950/80 backdrop-blur-md border-y border-neon-green/20 overflow-visible">
         <div className="container mx-auto px-4">
           <div className="text-center mb-40">
@@ -279,7 +323,6 @@ function App() {
         </div>
       </section>
 
-      {/* --- MENU SECTION --- */}
       <section id="menu" className="py-24 relative z-10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -304,10 +347,10 @@ function App() {
         </div>
       </section>
 
-      {/* --- FEEDBACK FORM --- */}
       <section id="contact" className="py-24 relative z-10">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="bg-gray-950/80 backdrop-blur-xl p-8 md:p-12 rounded-2xl border border-neon-green/30 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+          {/* İSTENİLEN DEĞİŞİKLİK BURADA YAPILDI: GÖLGE SADECE HOVER'DA ÇIKIYOR */}
+          <div className="bg-gray-950/80 backdrop-blur-xl p-8 md:p-12 rounded-2xl border border-neon-green/30 hover:shadow-[0_0_50px_rgba(57,255,20,0.3)] hover:border-neon-green transition-all duration-500 group">
             <div className="text-center mb-10">
               <h3 className="text-4xl md:text-5xl font-horror text-neon-green mb-3 drop-shadow-lg">GELISTIRICIYE FISILDA</h3>
               <p className="text-gray-400 text-lg">Yeni bir iğrenç tarif önerin veya bulduğun bir hatayı bildir.</p>
@@ -317,7 +360,6 @@ function App() {
         </div>
       </section>
 
-      {/* --- FEATURES --- */}
       <section className="py-20 bg-gray-950/80 backdrop-blur-sm border-y border-gray-800 relative z-10">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-12 text-center">
@@ -338,7 +380,6 @@ function App() {
         </div>
       </section>
 
-      {/* --- FORUM SECTION --- */}
       <section id="forum" className="py-24 bg-gray-950/90 backdrop-blur-md border-t border-neon-green/20 relative z-10">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="text-center mb-12">
