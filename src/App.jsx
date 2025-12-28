@@ -34,7 +34,7 @@ function SecretAccessModal({ onClose }) {
 
   // --- BURAYI DÜZENLE ---
   const CORRECT_PASSWORD = "orkunhocam"; // ŞİFRE DEĞİŞİM YERİ
-  const DRIVE_LINK = "https://drive.google.com/YOUR_DRIVE_LINK_HERE"; // Drive link yeri
+  const DRIVE_LINK = "https://drive.google.com/file/d/18XO0y_3D-iTRE-dprTThPRCKLq48oAjm/view?usp=sharing"; // Drive link yeri
   // ----------------------
 
   const handleLogin = (e) => {
