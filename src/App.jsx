@@ -34,7 +34,7 @@ function SecretAccessModal({ onClose }) {
 
   // --- BURAYI DÜZENLE ---
   const CORRECT_PASSWORD = "orkunhocam"; // ŞİFRE DEĞİŞİM YERİ
-  const DRIVE_LINK = "https://drive.google.com/file/d/18XO0y_3D-iTRE-dprTThPRCKLq48oAjm/view?usp=sharing"; // Drive link yeri
+  const DRIVE_LINK = "https://www.dropbox.com/scl/fi/rw6jlp58qqnigz4lyk34r/taste_of_fear_v1_setup.exe?rlkey=hk0b8ioo8q4upns5ngz53z4eh&st=je7pv21w&dl=1"; // Drive link yeri
   // ----------------------
 
   const handleLogin = (e) => {
